@@ -1,22 +1,24 @@
-# Compiled class file
-*.class
-
-# Log file
+# Logs
+**/logs
 *.log
 
-# BlueJ files
-*.ctxt
+# Runtime data
+**/pids
+*.pid
+*.seed
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+#Maven
+**/target
 
-# Package Files #
-*.jar
-*.war
-*.ear
-*.zip
-*.tar.gz
-*.rar
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+*.uml
+.idea/
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# Eclipse
+.classpath
+.settings/
+.project
+bin/
