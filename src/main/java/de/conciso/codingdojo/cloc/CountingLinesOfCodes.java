@@ -1,6 +1,7 @@
 package de.conciso.codingdojo.cloc;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * This interface must be implemented in this code kata. The task is to count all lines of java code of the file
@@ -20,5 +21,5 @@ public interface CountingLinesOfCodes {
      * @param sourceCodeFile valid java file
      * @return Number of code lines of the file
      */
-    int countLinesOfCode(File sourceCodeFile);
+    int countLinesOfCode(File sourceCodeFile) throws IOException;
 }
