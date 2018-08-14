@@ -7,7 +7,7 @@ public interface FizzBuzz {
      * <ul>
      *     <li>The number will be replaced with Fizz if it can be divided by 3</li>
      *     <li>The number will be replaced with Buzz if it can be divided by 5</li>
-     *     <li>It the number can be divided by both numbers then it will be replaced by FizzBuzz</li>
+     *     <li>If the number can be divided by both numbers then it will be replaced by FizzBuzz</li>
      * </ul>
      * @param first first integer of the fizz buzz generator
      * @param last last integer of the fizz buzz generator
