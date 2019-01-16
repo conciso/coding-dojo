@@ -18,5 +18,5 @@ public interface RussianMultiplication {
      * @param secondFactor second factor of the multiplication
      * @return product of the multiplication
      */
-    int multiply(int firstFactor, int secondFactor);
+    long multiply(long firstFactor, long secondFactor);
 }
