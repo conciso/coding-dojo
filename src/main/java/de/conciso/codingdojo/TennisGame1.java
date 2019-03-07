@@ -2,76 +2,104 @@ package de.conciso.codingdojo;
 
 public class TennisGame1 implements TennisGame {
 
-    private int m_score1 = 0;
-    private int m_score2 = 0;
-    private String player1Name;
-    private String player2Name;
+    private int firstPlayerScoreValue = 0;
+    private int secondPlayerScoreValue = 0;
+    private String firstPlayerName;
+    private String secondPlayerName;
 
-    public TennisGame1(String player1Name, String player2Name) {
-        this.player1Name = player1Name;
-        this.player2Name = player2Name;
+
+    public TennisGame1(String firstPlayerName, String secondPlayerName) {
+        this.firstPlayerName = firstPlayerName;
+        this.secondPlayerName = secondPlayerName;
     }
 
     public void wonPoint(String playerName) {
-        if (playerName == "player1")
-            m_score1 += 1;
-        else
-            m_score2 += 1;
+        if (this.firstPlayerName.equals(playerName)) {
+            firstPlayerScoreValue++;
+        } else if (this.secondPlayerName.equals(playerName)) {
+            secondPlayerScoreValue++;
+        } else {
+            throw new IllegalArgumentException("Unknown player");
+        }
     }
 
-    public String getScore() {
-        String score = "";
-        int tempScore=0;
-        if (m_score1==m_score2)
-        {
-            switch (m_score1)
-            {
-                case 0:
-                    score = "Love-All";
-                    break;
-                case 1:
-                    score = "Fifteen-All";
-                    break;
-                case 2:
-                    score = "Thirty-All";
-                    break;
-                default:
-                    score = "Deuce";
-                    break;
 
-            }
+    public String getScore() {
+        if (isTie()) {
+            return getScoreForTie();
+        } else if (isAdvantage()) {
+            return getScoreForAdvantage();
+        } else if (isWin()) {
+            return getScoreForWin();
+        } else {
+            return getScoreForOther();
         }
-        else if (m_score1>=4 || m_score2>=4)
-        {
-            int minusResult = m_score1-m_score2;
-            if (minusResult==1) score ="Advantage player1";
-            else if (minusResult ==-1) score ="Advantage player2";
-            else if (minusResult>=2) score = "Win for player1";
-            else score ="Win for player2";
+    }
+
+    private String getScoreForWin() {
+        return "Win for " + getLeadingPlayer();
+    }
+
+    private String getScoreForAdvantage() {
+        return "Advantage " + getLeadingPlayer();
+    }
+
+    private String getScoreForOther() {
+        return getScoreForScoreValue(firstPlayerScoreValue) + "-" + getScoreForScoreValue(
+            secondPlayerScoreValue);
+    }
+
+    private String getLeadingPlayer() {
+        return firstPlayerScoreValue > secondPlayerScoreValue ? firstPlayerName : secondPlayerName;
+    }
+
+    private boolean isAdvantage() {
+        return isEndGame()
+            && getAbsoluteScoreDifference() == 1;
+    }
+
+    private int getAbsoluteScoreDifference() {
+        return Math.abs(firstPlayerScoreValue - secondPlayerScoreValue);
+    }
+
+    private boolean isEndGame() {
+        return firstPlayerScoreValue >= 4 || secondPlayerScoreValue >= 4;
+    }
+
+    private boolean isWin() {
+        return (isEndGame())
+            && getAbsoluteScoreDifference() >= 2;
+    }
+
+    private boolean isTie() {
+        return firstPlayerScoreValue == secondPlayerScoreValue;
+    }
+
+    private String getScoreForTie() {
+        switch (firstPlayerScoreValue) {
+            case 0:
+                return "Love-All";
+            case 1:
+                return "Fifteen-All";
+            case 2:
+                return "Thirty-All";
+            default:
+                return "Deuce";
         }
-        else
-        {
-            for (int i=1; i<3; i++)
-            {
-                if (i==1) tempScore = m_score1;
-                else { score+="-"; tempScore = m_score2;}
-                switch(tempScore)
-                {
-                    case 0:
-                        score+="Love";
-                        break;
-                    case 1:
-                        score+="Fifteen";
-                        break;
-                    case 2:
-                        score+="Thirty";
-                        break;
-                    case 3:
-                        score+="Forty";
-                        break;
-                }
-            }
+    }
+
+    private String getScoreForScoreValue(int score) {
+        switch (score) {
+            case 0:
+                return "Love";
+            case 1:
+                return "Fifteen";
+            case 2:
+                return "Thirty";
+            case 3:
+                return "Forty";
+            default:
+                return "";
         }
-        return score;
     }
 }
