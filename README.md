@@ -12,11 +12,12 @@ takes a new phrase to guess.
 *true* or *false* depending on whether the character is contained in the word or not.
 If the the game is already ended or is not initialized an exception is thrown.
 3. Method **getNumberOfTries** returns the number of tries.
-4. Method **getMaskedPhrase** returns the phrase where the characters which are not
+4. Method **getNumberOfUnsuccessfulTries** returns the number of unsuccessful tries.
+5. Method **getMaskedPhrase** returns the phrase where the characters which are not
 already guessed are masked with "_". If the phrase contains whitespaces or punctuation
 characters then these are not masked.
-5. Method **isRunning** returns *false* if the phrase is completely guessed or the game is not
-initialized. Otherwise it returns *true* if there are still characters missing.
+6. Method **isRunning** returns *false* if the phrase is completely guessed or the game is not
+initialized. Otherwise it returns *true*.
 
 ## Rules for Programming
 ### Easy
