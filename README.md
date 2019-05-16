@@ -9,14 +9,14 @@ Develop a class which should implement the following methods
 1. Method **setNewPhrase** takes a word or phrase which resets the game and
 takes a new phrase to guess.
 2. Method **guessCharacter** takes a character to insert and returns
-*true* or *false* depending on whether the character is contained in the word or not.
+*true* or *false* depending on whether the character is contained in the phrase or not.
 If the the game is already ended or is not initialized an exception is thrown.
 3. Method **getNumberOfTries** returns the number of tries.
 4. Method **getNumberOfUnsuccessfulTries** returns the number of unsuccessful tries.
 5. Method **getMaskedPhrase** returns the phrase where the characters which are not
 already guessed are masked with "_". If the phrase contains whitespaces or punctuation
 characters then these are not masked.
-6. Method **isRunning** returns *false* if the phrase is completely guessed or the game is not
+6. Method **isGameRunning** returns *false* if the phrase is completely guessed or the game is not
 initialized. Otherwise it returns *true*.
 
 ## Rules for Programming
