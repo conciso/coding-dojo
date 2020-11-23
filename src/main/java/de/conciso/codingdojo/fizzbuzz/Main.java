@@ -7,8 +7,9 @@ import java.util.Arrays;
  */
 public class Main {
     public static void main(String[] argv) {
-        final String[] numberArray = new FizzBuzzImpl().createFizzBuzz(1, 100);
-
-        Arrays.stream(numberArray).forEach(s -> System.out.println(s));
+//        final String[] numberArray = new FizzBuzzImpl().createFizzBuzz(1, 100);
+//
+//        Arrays.stream(numberArray).forEach(s -> System.out.println(s));
     }
+
 }
