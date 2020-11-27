@@ -10,12 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("/")
+@RequestMapping("/welcome")
 public class HelloController {
 
   GreetingRepository greetingRepository;
@@ -24,15 +25,15 @@ public class HelloController {
     this.greetingRepository = greetingRepository;
   }
 
-  @PostMapping(path = "/",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = {MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<Greeting> postGreeting(Person person) {
-    return ResponseEntity.ok(new Greeting("Hallo " + person.getName()));
+  public ResponseEntity<Greeting> createGreeting(@RequestBody Person person) {
+    Greeting greeting = new Greeting("Hallo " + person.getName());
+    greetingRepository.save(greeting);
+    return ResponseEntity.ok(greeting);
   }
 
-  @GetMapping(path = "/",
-      produces = {MediaType.APPLICATION_JSON_VALUE})
+  @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<List<Greeting>> getPastGreetings() {
     List<Greeting> result = greetingRepository.findAll();
     return ResponseEntity.ok(result);
