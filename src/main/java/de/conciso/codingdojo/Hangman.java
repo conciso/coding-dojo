@@ -6,7 +6,6 @@ public interface Hangman {
      * Start of game. It resets all states and starts a new game.
      * @param phrase word or phrase which should be guessed
      */
-
     void setNewPhrase(String phrase);
 
     /**

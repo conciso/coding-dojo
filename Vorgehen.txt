@@ -1,0 +1,10 @@
+Vorgehen
+- Interface implementieren
+- Feld erstellen
+- set-Methode erstellen
+  * null, leerer String
+  * limit 30 Zeichen
+  * Phrase
+- Status prüfen
+- Aufteilen der set-Methode?
+
