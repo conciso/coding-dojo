@@ -7,7 +7,7 @@ public interface Hangman {
      * @param phrase word or phrase which should be guessed
      */
 
-    void setNewPhrase(String phrase);
+    void startNewGame(String phrase);
 
     /**
      * Takes one character as guess. If the game is not initialized or is already ended an exception
@@ -39,9 +39,15 @@ public interface Hangman {
     String getMaskedPhrase();
 
     /**
+     * Get the solution phrase used for the initialisation of the game. When using this method the
+     * game is stopped.
+     * @return solution phrase of the game.
+     */
+    String getResolution();
+
+    /**
      * Get the state of the game
      * @return <code>true</code> if the game is still running, otherwise <code>false</code>
      */
     boolean isGameRunning();
-
 }
