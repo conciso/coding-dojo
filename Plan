@@ -1,0 +1,13 @@
+setPhrase:
+parameter in member variable speichern
+tests:
+-länge testen der Phrase über MaskedPhrase
+- isGameRunning anfangs false, nach Phrase setzen true
+- MaskedPhrase -> Exception wenn keine phrase gesetzt
+- MaskedPhrase muss Buchstaben durch Unterstriche ersetzen
+- Zahlen wie Satzzeichen behandeln
+- Leerer String, alles ohne Buchstaben -> IllegalArgument
+
+- null -> Exception (IllegalArgument), is Running bleibt wie vorher
+
+- wenn game is not running & phrase gesetzt -> phrase
