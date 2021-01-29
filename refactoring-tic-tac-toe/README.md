@@ -15,8 +15,8 @@ interface description which has been defined by the architect together with the 
 As add-on please do the same with the simple console interface. The game should work with the
 following behaviour:
 
-2. Ask for the names of the players
-1. Ask for the size of the game grid
+1. Ask for the names of the players
+2. Ask for the size of the game grid
 3. Show the grid and the players with their game tile and their number of moves.
 4. Ask in changing order for the game move of the actual player and then repeat with step 3.
 5. If a player has won the game show the name of the winner together with the needed moves.
