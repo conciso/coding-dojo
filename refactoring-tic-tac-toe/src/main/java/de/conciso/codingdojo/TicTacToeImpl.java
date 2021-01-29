@@ -10,7 +10,7 @@ public class TicTacToeImpl implements TicTacToe {
   public static final String EMPTY_FIELD = "-";
   private String grid = "";
   private String Player1Name = "player1";
-  private String Player2Name = "player1";
+  private String Player2Name = "player2";
   private int player1NumberOfMoves;
   private int player2NumberOfMoves;
   private String player1Tile = "x";
@@ -24,6 +24,11 @@ public class TicTacToeImpl implements TicTacToe {
         "Number of rows should be greater ");
     requireMinGridSizeParameter(numberOfColumns, MIN_COLUMN_COUNT,
         "Number of columns should be greater ");
+    requireDifferentTiles();
+    requireDifferentPlayerNames();
+
+    this.player1NumberOfMoves = 0;
+    this.player2NumberOfMoves = 0;
 
     this.numberOfRows = numberOfRows;
     this.numberOfColumns = numberOfColumns;
@@ -39,6 +44,19 @@ public class TicTacToeImpl implements TicTacToe {
         .mapToObj(i -> row)
         .reduce((row1, row2) -> row1 + row2)
         .orElse("");
+
+  }
+
+  private void requireDifferentPlayerNames() {
+    if (getPlayer1Name().equals(getPlayer2Name())) {
+      throw new IllegalStateException("Player names have to be different");
+    }
+  }
+
+  private void requireDifferentTiles() {
+    if (getGameTilePlayer1().equals(getGameTilePlayer2())) {
+      throw new IllegalStateException("Game tiles have to be different");
+    }
   }
 
   private void requireMinGridSizeParameter(int size, int minRowNumber, String s) {
@@ -54,6 +72,7 @@ public class TicTacToeImpl implements TicTacToe {
 
   @Override
   public void setPlayer1Name(String name) {
+    requireGameNotRunning();
     requireValidPlayerName(1, name);
     this.Player1Name = name;
   }
@@ -72,6 +91,7 @@ public class TicTacToeImpl implements TicTacToe {
 
   @Override
   public void setPlayer2Name(String name) {
+    requireGameNotRunning();
     requireValidPlayerName(2, name);
     this.Player2Name = name;
   }
@@ -125,7 +145,8 @@ public class TicTacToeImpl implements TicTacToe {
 
   @Override
   public boolean isGameRunning() {
-    return !isWinnerPlayer1() && !isWinnerPlayer2();
+    return !isWinnerPlayer1() && !isWinnerPlayer2()
+        && (player1NumberOfMoves + player2NumberOfMoves) < (numberOfRows * numberOfColumns);
   }
 
   @Override
@@ -215,8 +236,10 @@ public class TicTacToeImpl implements TicTacToe {
   }
 
   @Override
-  public void setGameTilePlayer1(String t) {
-    this.player1Tile = t;
+  public void setGameTilePlayer1(String tile) {
+    requireGameNotRunning();
+    requireValidTileName(1, tile);
+    this.player1Tile = tile;
   }
 
   @Override
@@ -225,7 +248,27 @@ public class TicTacToeImpl implements TicTacToe {
   }
 
   @Override
-  public void setGameTilePlayer2(String t) {
-    player2Tile = t;
+  public void setGameTilePlayer2(String tile) {
+    requireGameNotRunning();
+    requireValidTileName(2, tile);
+    player2Tile = tile;
   }
+
+  private void requireGameNotRunning() {
+    if (isGameRunning()) {
+      throw new IllegalStateException("Settings must not be made if game is running");
+    }
+  }
+
+  private void requireValidTileName(int playerNumber, String tile) {
+    Objects.requireNonNull(tile, "Tile of player " + playerNumber + " must not be null");
+    if (tile.isEmpty()) {
+      throw new IllegalArgumentException("Tile of player " + playerNumber + " must not be empty");
+    }
+    if (tile.length() > 1) {
+      throw new IllegalArgumentException(
+          "Tile of player " + playerNumber + " must not be longer than 1 character");
+    }
+  }
+
 }

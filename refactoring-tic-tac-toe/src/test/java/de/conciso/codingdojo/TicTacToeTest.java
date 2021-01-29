@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,7 +15,7 @@ class TicTacToeTest {
 
   public static final String NAME_PLAYER_1 = "Player1";
   public static final String NAME_PLAYER_2 = "Player2";
-  private TicTacToe cut = new TicTacToeImpl();
+  private TicTacToe cut;
 
   private static Stream<int[]> sizeProvider() {
     return Stream.of(
@@ -24,6 +25,11 @@ class TicTacToeTest {
         new int[]{10, 11},
         new int[]{1050, 1000}
     );
+  }
+
+  @BeforeEach
+  public void setUp() {
+    cut = new TicTacToeImpl();
   }
 
   @Nested
@@ -68,10 +74,106 @@ class TicTacToeTest {
     }
 
     @Test
-    public void withoutGameStartGameIsNotRunning() {
+    public void numberOfMovesOfPlayer1IsReset() {
+      cut.startGame(5, 5);
+      cut.setMovePlayer1(1, 1);
+
+      cut.startGame(4, 4);
+
+      assertThat(cut.numberOfMovesPlayer1()).isEqualTo(0);
+    }
+
+    @Test
+    public void numberOfMovesOfPlayer2IsReset() {
+      cut.startGame(5, 5);
+      cut.setMovePlayer2(1, 1);
+
+      cut.startGame(4, 4);
+
+      assertThat(cut.numberOfMovesPlayer2()).isEqualTo(0);
+    }
+
+    @Test
+    public void withEqualGameTilesThrowsException() {
+      cut.setGameTilePlayer1(cut.getGameTilePlayer2());
+
+      assertThrows(IllegalStateException.class, () -> cut.startGame(5, 5));
+    }
+
+    @Test
+    public void withEqualPlayerNamesThrowsException() {
+      cut.setPlayer1Name(cut.getPlayer2Name());
+
+      assertThrows(IllegalStateException.class, () -> cut.startGame(5, 5));
+    }
+
+    @Test
+    public void changingPlayer1NameThrowsException() {
+      cut.startGame(5, 5);
+
+      assertThrows(IllegalStateException.class, () -> cut.setPlayer1Name("asdfasdf"));
+    }
+
+    @Test
+    public void changingPlayer2NameThrowsException() {
+      cut.startGame(5, 5);
+
+      assertThrows(IllegalStateException.class, () -> cut.setPlayer2Name("asdfasdf"));
+    }
+
+    @Test
+    public void changingPlayer1TileThrowsException() {
+      cut.startGame(5, 5);
+
+      assertThrows(IllegalStateException.class, () -> cut.setGameTilePlayer1("a"));
+    }
+
+    @Test
+    public void changingPlayer2TileThrowsException() {
+      cut.startGame(5, 5);
+
+      assertThrows(IllegalStateException.class, () -> cut.setGameTilePlayer2("a"));
+    }
+
+  }
+
+  @Nested
+  class WhenGameIsNotStarted {
+
+    @Test
+    public void gameIsNotRunning() {
       assertThat(cut.isGameRunning()).isFalse();
     }
 
+    @Test
+    public void numberOfMovesOfPlayer1IsZero() {
+      assertThat(cut.numberOfMovesPlayer1()).isEqualTo(0);
+    }
+
+    @Test
+    public void numberOfMovesOfPlayer2IsZero() {
+      assertThat(cut.numberOfMovesPlayer2()).isEqualTo(0);
+    }
+
+    @Test
+    public void player1HasNotWon() {
+      assertThat(cut.isWinnerPlayer1()).isFalse();
+    }
+
+    @Test
+    public void player2HasNotWon() {
+      assertThat(cut.isWinnerPlayer2()).isFalse();
+    }
+
+    @Test
+    public void gameTilesAreDifferent() {
+      assertThat(cut.getGameTilePlayer1()).isNotEqualTo(cut.getGameTilePlayer2());
+    }
+
+    @Test
+    public void playerNamesAreDifferent() {
+      assertThat(cut.getGameTilePlayer1()).isNotEqualTo(cut.getGameTilePlayer2());
+    }
   }
 
   @Nested
@@ -113,7 +215,7 @@ class TicTacToeTest {
   }
 
   @Nested
-  class WhenPlayer1Moves {
+  class WhenPlayer1MakesAMove {
 
     @Test
     public void withValidMoveTileIsSet() {
@@ -130,7 +232,7 @@ class TicTacToeTest {
       final int row = 4, column = 1, rowAndColumnSize = 3;
       cut.startGame(rowAndColumnSize, rowAndColumnSize);
 
-      assertThrows(IllegalArgumentException.class, () ->cut.setMovePlayer1(row, column));
+      assertThrows(IllegalArgumentException.class, () -> cut.setMovePlayer1(row, column));
     }
 
     @Test
@@ -138,7 +240,7 @@ class TicTacToeTest {
       final int row = 0, column = 1, rowAndColumnSize = 3;
       cut.startGame(rowAndColumnSize, rowAndColumnSize);
 
-      assertThrows(IllegalArgumentException.class, () ->cut.setMovePlayer1(row, column));
+      assertThrows(IllegalArgumentException.class, () -> cut.setMovePlayer1(row, column));
     }
 
     @Test
@@ -146,7 +248,7 @@ class TicTacToeTest {
       final int row = 3, column = 5, rowAndColumnSize = 3;
       cut.startGame(rowAndColumnSize, rowAndColumnSize);
 
-      assertThrows(IllegalArgumentException.class, () ->cut.setMovePlayer1(row, column));
+      assertThrows(IllegalArgumentException.class, () -> cut.setMovePlayer1(row, column));
     }
 
     @Test
@@ -154,7 +256,7 @@ class TicTacToeTest {
       final int row = 3, column = -1, rowAndColumnSize = 3;
       cut.startGame(rowAndColumnSize, rowAndColumnSize);
 
-      assertThrows(IllegalArgumentException.class, () ->cut.setMovePlayer1(row, column));
+      assertThrows(IllegalArgumentException.class, () -> cut.setMovePlayer1(row, column));
     }
 
     @Test
@@ -213,10 +315,19 @@ class TicTacToeTest {
       assertThat(cut.isWinnerPlayer1()).isTrue();
     }
 
+    @Test
+    public void withValidMoveIncreasesNumberOfMoves() {
+      cut.startGame(3, 3);
+      int numberOfMoves = cut.numberOfMovesPlayer1();
+      cut.setMovePlayer1(1, 1);
+
+      assertThat(cut.numberOfMovesPlayer1()).isEqualTo(numberOfMoves + 1);
+    }
+
   }
 
   @Nested
-  class WhenPlayer2Moves {
+  class WhenPlayer2MakesAMove {
 
     @Test
     public void withValidMoveTileIsSet() {
@@ -233,7 +344,7 @@ class TicTacToeTest {
       final int row = 4, column = 1, rowAndColumnSize = 3;
       cut.startGame(rowAndColumnSize, rowAndColumnSize);
 
-      assertThrows(IllegalArgumentException.class, () ->cut.setMovePlayer2(row, column));
+      assertThrows(IllegalArgumentException.class, () -> cut.setMovePlayer2(row, column));
     }
 
     @Test
@@ -241,7 +352,7 @@ class TicTacToeTest {
       final int row = 0, column = 1, rowAndColumnSize = 3;
       cut.startGame(rowAndColumnSize, rowAndColumnSize);
 
-      assertThrows(IllegalArgumentException.class, () ->cut.setMovePlayer2(row, column));
+      assertThrows(IllegalArgumentException.class, () -> cut.setMovePlayer2(row, column));
     }
 
     @Test
@@ -249,7 +360,7 @@ class TicTacToeTest {
       final int row = 3, column = 5, rowAndColumnSize = 3;
       cut.startGame(rowAndColumnSize, rowAndColumnSize);
 
-      assertThrows(IllegalArgumentException.class, () ->cut.setMovePlayer2(row, column));
+      assertThrows(IllegalArgumentException.class, () -> cut.setMovePlayer2(row, column));
     }
 
     @Test
@@ -257,7 +368,7 @@ class TicTacToeTest {
       final int row = 3, column = -1, rowAndColumnSize = 3;
       cut.startGame(rowAndColumnSize, rowAndColumnSize);
 
-      assertThrows(IllegalArgumentException.class, () ->cut.setMovePlayer2(row, column));
+      assertThrows(IllegalArgumentException.class, () -> cut.setMovePlayer2(row, column));
     }
 
     @Test
@@ -269,6 +380,85 @@ class TicTacToeTest {
       assertThrows(IllegalArgumentException.class, () -> cut.setMovePlayer2(row, column));
     }
 
+    @Test
+    public void withoutWinningMovePlayerIsNotWinning() {
+      cut.startGame(3, 3);
+
+      assertThat(cut.isWinnerPlayer2()).isFalse();
+    }
+
+    @Test
+    public void withHorizontalWinningMovePlayerWins() {
+      cut.startGame(3, 3);
+      cut.setMovePlayer2(2, 1);
+      cut.setMovePlayer2(2, 2);
+
+      cut.setMovePlayer2(2, 3);
+      assertThat(cut.isWinnerPlayer2()).isTrue();
+    }
+
+    @Test
+    public void withVerticalWinningMovePlayerWins() {
+      cut.startGame(3, 3);
+      cut.setMovePlayer2(1, 1);
+      cut.setMovePlayer2(2, 1);
+
+      cut.setMovePlayer2(3, 1);
+      assertThat(cut.isWinnerPlayer2()).isTrue();
+    }
+
+    @Test
+    public void withLeftToRightDiagonalWinningMovePlayerWins() {
+      cut.startGame(3, 3);
+      cut.setMovePlayer2(1, 1);
+      cut.setMovePlayer2(2, 2);
+
+      cut.setMovePlayer2(3, 3);
+      assertThat(cut.isWinnerPlayer2()).isTrue();
+    }
+
+    @Test
+    public void withRightToLeftDiagonalWinningMovePlayerWins() {
+      cut.startGame(3, 3);
+      cut.setMovePlayer2(1, 3);
+      cut.setMovePlayer2(2, 2);
+
+      cut.setMovePlayer2(3, 1);
+      assertThat(cut.isWinnerPlayer2()).isTrue();
+    }
   }
 
+  @Nested
+  class WhenGameTilesAreSet {
+    @Test
+    public void withNullValuePlayer1TileThrowsException() {
+      assertThrows(NullPointerException.class, () -> cut.setGameTilePlayer1(null));
+    }
+
+    @Test
+    public void withNullValuePlayer2TileThrowsException() {
+      assertThrows(NullPointerException.class, () -> cut.setGameTilePlayer2(null));
+    }
+
+    @Test
+    public void withEmptyValuePlayer1TileThrowsException() {
+      assertThrows(IllegalArgumentException.class, () -> cut.setGameTilePlayer1(""));
+    }
+
+    @Test
+    public void withEmptyValuePlayer2TileThrowsException() {
+      assertThrows(IllegalArgumentException.class, () -> cut.setGameTilePlayer2(""));
+    }
+
+    @Test
+    public void withMultiCharacterValuePlayer1TileThrowsException() {
+      assertThrows(IllegalArgumentException.class, () -> cut.setGameTilePlayer1("as"));
+    }
+
+    @Test
+    public void withMultiCharacterValuePlayer2TileThrowsException() {
+      assertThrows(IllegalArgumentException.class, () -> cut.setGameTilePlayer2("er"));
+    }
+
+  }
 }
