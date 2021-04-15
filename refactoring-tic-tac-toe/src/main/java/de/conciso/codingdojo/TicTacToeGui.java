@@ -12,5 +12,7 @@ package de.conciso.codingdojo;
  */
 public interface TicTacToeGui {
 
+  void start();
+
   // TODO
 }
