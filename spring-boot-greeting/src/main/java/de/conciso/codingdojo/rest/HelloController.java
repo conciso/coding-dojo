@@ -16,8 +16,12 @@ public class HelloController {
   @PostMapping(path = "/",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = {MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<String> postGreeting() {
-    return ResponseEntity.ok().build();
+  public ResponseEntity<Message> postGreeting(Name name) {
+    if (name.name() == null) {
+      return ResponseEntity.badRequest().build();
+    }
+
+    return ResponseEntity.ok().body(ImmutableMessage.builder().message("Welcome " + name.name()).build());
   }
 
   @GetMapping(path = "/",
