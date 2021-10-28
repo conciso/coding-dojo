@@ -1,6 +1,6 @@
 package de.conciso.codingdojo;
 
-public enum Cards {
+public enum Values {
     TWO,
     THREE,
     FOUR,
