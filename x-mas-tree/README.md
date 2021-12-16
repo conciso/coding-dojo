@@ -27,4 +27,4 @@ If the exercise seems to be too easy then some constraints could be used, e.g.:
  * No usage of loops
  * No usage of lambdas and loops
  * No usages of if-then-else expression
- * No local and global variables
+ * No local and member variables
