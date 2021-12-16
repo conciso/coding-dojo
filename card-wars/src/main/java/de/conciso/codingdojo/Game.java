@@ -4,21 +4,11 @@ import java.util.List;
 
 public interface Game {
     /**
-     * Creates the card deck with the appropriate number of cards. The cards will be build from the given values and
-     * suits.
-     *
-     * @param numberOfCards number of cards to be created
-     * @return Set with cards
+     * Deal the cards for the players
+     * @param one player one
+     * @param two player two
      */
-    List<Card> createCardDeck(int numberOfCards);
-
-    /**
-     * Shuffle the cards
-     *
-     * @param cardsToShuffle cards to be mixed
-     * @return given cards in new order
-     */
-    List<Card> shuffleCards(List<Card> cardsToShuffle);
+    void dealCards(Player one, Player two);
 
     /**
      * Do one move of the game.

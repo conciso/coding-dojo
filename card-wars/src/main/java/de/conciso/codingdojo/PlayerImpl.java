@@ -1,16 +1,22 @@
 package de.conciso.codingdojo;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class PlayerImpl implements Player {
 
     private LinkedList<Card> cardDeck;
 
-    public PlayerImpl(List<Card> initalCards) {
-        if (initalCards.isEmpty()) {
+    public PlayerImpl() {
+        cardDeck = new LinkedList<>();
+    }
+    @Override
+    public void initCards(List<Card> cardDeck) {
+        if (cardDeck.isEmpty()) {
             throw new NoCardsException();
         }
-        cardDeck = new LinkedList<>(initalCards);
+        this.cardDeck = new LinkedList<>(cardDeck);
     }
 
     @Override
@@ -20,12 +26,15 @@ public class PlayerImpl implements Player {
 
     @Override
     public List<Card> getTopThreeCards() {
-        return Collections.emptyList();
+        return cardDeck.size() < 3 ?
+                Collections.emptyList() :
+                IntStream.range(0, 3).mapToObj((i) -> cardDeck.removeFirst()).collect(Collectors.toList());
     }
 
     @Override
     public void won(List<Card> wonCards) {
-
+        Objects.requireNonNull(wonCards);
+        cardDeck.addAll(wonCards);
     }
 
     @Override
