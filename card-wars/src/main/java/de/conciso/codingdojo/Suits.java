@@ -1,8 +1,8 @@
 package de.conciso.codingdojo;
 
 public enum Suits {
-    CLUBS,
-    SPADES,
+    DIAMONDS,
     HEARTS,
-    DIAMONDS
+    SPADES,
+    CLUBS
 }
