@@ -19,9 +19,9 @@ f         f
 ```
 or with letter 'c':
 ```text
-     a
-    b b
-   c   c
-    b b
-     a
+  a
+ b b
+c   c
+ b b
+  a
 ```
