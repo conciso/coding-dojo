@@ -1,7 +1,7 @@
 Diamond 
 ========
 In this code kata you must give a letter as parameter into the method to implement and 
-this must create a String with a diamond around it.
+this must create a String with a diamond around this letter.
 
 E.g.: Given letter 'f':
 ```text
