@@ -8,10 +8,10 @@ public interface TicTacToe {
   /**
    * Start game with a given grid.
    *
-   * @param numberOfRows    number of rows of the game grid
-   * @param numberOfColumns number of columns of the game grid
+   * @param sizeOfSquare         size of the rows and columns in the square
+   * @param numberOfWinningTiles number of tiles in row, column or diagonal which win the game
    */
-  public void startGame(int numberOfRows, int numberOfColumns);
+  public void startGame(int sizeOfSquare, int numberOfWinningTiles);
 
   /**
    * Get the name of player 1.
