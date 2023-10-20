@@ -12,10 +12,10 @@ public interface Reversi<C, T extends Disc<C>> {
   Board<C, T> getBoard();
 
   /**
-   * Get the actual player for the next move
+   * Get the current player for the next move
    * @return actual player on the move
    */
-  Player getActualPlayer();
+  Player<C> getCurrentPlayer();
 
   /**
    * Calculate the possible moves for the given player
@@ -23,13 +23,13 @@ public interface Reversi<C, T extends Disc<C>> {
    * @param player player to check
    * @return list with the possible positions for the given player
    */
-  List<Position> calculateMoves(Player player);
+  List<Position> calculateMoves(Player<C> player);
 
   /**
-   * @param position
-   * @param player
+   * Do a move for the current player
+   * @param position position, where the disc is set
    */
-  void doMove(Position position, Player player);
+  void doMove(Position position);
 
   /**
    * Checks if the game is still running and there are possible positions for the actual player
@@ -43,5 +43,5 @@ public interface Reversi<C, T extends Disc<C>> {
    *
    * @return winning player of the game
    */
-  Player getWinner();
+  Player<C> getWinner();
 }

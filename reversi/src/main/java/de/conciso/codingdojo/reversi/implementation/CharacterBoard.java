@@ -31,7 +31,7 @@ public class CharacterBoard implements EditableBoard<Character, CharacterDisc> {
         .mapToObj(i -> range(0, maxX)
             .mapToObj(j -> Optional.empty())
             .toArray(Optional[]::new))
-        .toArray(Optional[][]::new);
+            .toArray(Optional[][]::new);
   }
 
   @Override

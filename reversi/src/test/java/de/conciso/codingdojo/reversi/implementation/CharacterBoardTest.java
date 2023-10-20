@@ -1,11 +1,12 @@
 package de.conciso.codingdojo.reversi.implementation;
 
+import static de.conciso.codingdojo.reversi.implementation.CharacterBoard.DEFAULT_MAXIMUM_HORIZONTAL;
+import static de.conciso.codingdojo.reversi.implementation.CharacterBoard.DEFAULT_MAXIMUM_VERTICAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
 import de.conciso.codingdojo.reversi.Position;
-import java.util.Random;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
@@ -16,7 +17,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 class CharacterBoardTest {
 
   private CharacterBoard cut;
-  private CharacterDisc disc = new CharacterDisc('D');
+  private final CharacterDisc disc = new CharacterDisc('D');
 
   @Nested
   class BoardCreation {
@@ -39,7 +40,7 @@ class CharacterBoardTest {
       assertThat(cut.getMinimumPosition()).isEqualTo(new Position(0, 0));
     }
 
-    @RepeatedTest(CharacterBoard.DEFAULT_MAXIMUM_VERTICAL * CharacterBoard.DEFAULT_MAXIMUM_HORIZONTAL)
+    @RepeatedTest(DEFAULT_MAXIMUM_VERTICAL * CharacterBoard.DEFAULT_MAXIMUM_HORIZONTAL)
     void createsEmptyBoard(RepetitionInfo info) {
       cut = new CharacterBoard();
       var devideBy = cut.getMaximumPosition().x() + 1;
@@ -56,9 +57,9 @@ class CharacterBoardTest {
     @RepeatedTest(5 * 3)
     void createsEmptyRectangularBoard(RepetitionInfo info) {
       cut = new CharacterBoard(5, 3);
-      var devideBy = cut.getMaximumPosition().x() + 1;
-      var fieldX = (info.getCurrentRepetition() - 1) % devideBy;
-      var fieldY = (info.getCurrentRepetition() - 1) / devideBy;
+      var divideBy = cut.getMaximumPosition().x() + 1;
+      var fieldX = (info.getCurrentRepetition() - 1) % divideBy;
+      var fieldY = (info.getCurrentRepetition() - 1) / divideBy;
 
       assertThat(cut.getPosition(
           new Position(
@@ -80,7 +81,7 @@ class CharacterBoardTest {
           .isThrownBy(() ->
               cut.getPosition(new Position(
                   xPosition,
-                  new Random().nextInt(cut.getMaximumPosition().x() + 1))));
+                  0)));
     }
 
     @ParameterizedTest
@@ -90,7 +91,7 @@ class CharacterBoardTest {
 
       assertThat(cut.getPosition(new Position(
           xPosition,
-          new Random().nextInt(cut.getMaximumPosition().x() + 1))))
+          DEFAULT_MAXIMUM_VERTICAL - 1)))
           .isEmpty();
     }
 
@@ -102,7 +103,7 @@ class CharacterBoardTest {
       assertThatIllegalArgumentException()
           .isThrownBy(() ->
               cut.getPosition(new Position(
-                  new Random().nextInt(cut.getMaximumPosition().y() + 1),
+                  DEFAULT_MAXIMUM_HORIZONTAL - 1,
                   yPosition)));
     }
 
@@ -112,7 +113,7 @@ class CharacterBoardTest {
       cut = new CharacterBoard();
 
       assertThat(cut.getPosition(new Position(
-          new Random().nextInt(cut.getMaximumPosition().y() + 1),
+          0,
           yPosition)))
           .isEmpty();
     }
@@ -126,7 +127,7 @@ class CharacterBoardTest {
           .isThrownBy(() ->
               cut.setPosition(new Position(
                   xPosition,
-                  new Random().nextInt(cut.getMaximumPosition().x() + 1)), disc));
+                  0), disc));
     }
 
     @ParameterizedTest
@@ -138,7 +139,7 @@ class CharacterBoardTest {
           .isThrownBy(() ->
               cut.setPosition(new Position(
                   xPosition,
-                  new Random().nextInt(cut.getMaximumPosition().x() + 1)), disc));
+                  DEFAULT_MAXIMUM_VERTICAL - 1), disc));
     }
 
     @ParameterizedTest
@@ -149,7 +150,7 @@ class CharacterBoardTest {
       assertThatIllegalArgumentException()
           .isThrownBy(() ->
               cut.setPosition(new Position(
-                  new Random().nextInt(cut.getMaximumPosition().y() + 1),
+                  0,
                   yPosition), disc));
     }
 
@@ -161,18 +162,18 @@ class CharacterBoardTest {
       assertThatNoException()
           .isThrownBy(() ->
               cut.setPosition(new Position(
-                  new Random().nextInt(cut.getMaximumPosition().y() + 1),
+                  DEFAULT_MAXIMUM_HORIZONTAL - 1,
                   yPosition), disc));
     }
   }
 
-  @RepeatedTest(10)
-  void setPositionSetsDisc() {
+  @RepeatedTest(DEFAULT_MAXIMUM_VERTICAL * DEFAULT_MAXIMUM_HORIZONTAL)
+  void setPositionSetsDisc(RepetitionInfo info) {
     cut = new CharacterBoard();
-    var rnd = new Random();
+    var value = info.getCurrentRepetition() - 1;
     var position = new Position(
-        rnd.nextInt(CharacterBoard.DEFAULT_MAXIMUM_HORIZONTAL),
-        rnd.nextInt(CharacterBoard.DEFAULT_MAXIMUM_VERTICAL));
+         value % DEFAULT_MAXIMUM_VERTICAL,
+         value / DEFAULT_MAXIMUM_VERTICAL);
 
     cut.setPosition(position, disc);
     assertThat(cut.getPosition(position))
@@ -188,29 +189,30 @@ class CharacterBoardTest {
     void withDefaultConstructorReturns8x8BoardString() {
       cut = new CharacterBoard();
 
-      assertThat(cut.toString())
-          .isEqualTo(
-              "........\n"
-                  + "........\n"
-                  + "........\n"
-                  + "........\n"
-                  + "........\n"
-                  + "........\n"
-                  + "........\n"
-                  + "........");
+      assertThat(cut)
+          .hasToString(
+              """
+                  ........
+                  ........
+                  ........
+                  ........
+                  ........
+                  ........
+                  ........
+                  ........""");
     }
 
     @Test
     void withRectangularConstructorReturnsRectangularBoard() {
       cut = new CharacterBoard(5, 4);
 
-      assertThat(cut.toString())
-          .isEqualTo(
-              ".....\n"
-                  + ".....\n"
-                  + ".....\n"
-                  + "....."
-          );
+      assertThat(cut).hasToString(
+          """
+              .....
+              .....
+              .....
+              ....."""
+      );
     }
   }
 }

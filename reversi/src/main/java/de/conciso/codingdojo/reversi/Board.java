@@ -15,7 +15,7 @@ public interface Board<C, T extends Disc<C>> {
   /**
    * Get the stone at the given position
    *
-   * @param position
+   * @param position position on board
    * @return disc at the position or empty string if no disc is present
    */
   Optional<CharacterDisc> getPosition(Position position);
