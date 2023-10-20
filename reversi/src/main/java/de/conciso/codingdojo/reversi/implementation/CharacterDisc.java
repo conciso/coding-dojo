@@ -6,7 +6,7 @@ import java.util.StringJoiner;
 
 public class CharacterDisc implements Disc<Character> {
 
-  private Character symbol;
+  private final Character symbol;
 
   public CharacterDisc(Character c) {
     this.symbol = c;

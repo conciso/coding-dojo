@@ -15,7 +15,7 @@ public interface Reversi<C, T extends Disc<C>> {
    * Get the actual player for the next move
    * @return actual player on the move
    */
-  Player<?> getActualPlayer();
+  Player<?> getCurrentPlayer();
 
   /**
    * Calculate the possible moves for the given player
@@ -27,9 +27,8 @@ public interface Reversi<C, T extends Disc<C>> {
 
   /**
    * @param position
-   * @param player
    */
-  void doMove(Position position, Player<?> player);
+  void doMove(Position position);
 
   /**
    * Checks if the game is still running and there are possible positions for the actual player

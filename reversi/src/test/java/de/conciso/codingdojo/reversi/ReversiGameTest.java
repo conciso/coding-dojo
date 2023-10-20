@@ -7,7 +7,6 @@ import de.conciso.codingdojo.reversi.implementation.CharacterDisc;
 import de.conciso.codingdojo.reversi.implementation.ReversiGame;
 import java.util.Optional;
 import java.util.stream.Stream;
-import javax.swing.text.html.Option;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -75,12 +74,6 @@ class ReversiGameTest {
     }
   }
 
-  @Nested
-  class CalculateMove{
-    @Test
-    void
-
-  }
   private static Stream<Arguments> startingStateParams() {
     return Stream.of(
         Arguments.arguments(3, 3, Optional.of(CHARACTER_DISC_P1)),
@@ -106,5 +99,57 @@ class ReversiGameTest {
     );
   }
 
+  @Nested
+  class UsingPlayerTests {
+
+    @BeforeEach
+    void setUp() {
+      cut = new ReversiGame(player1, player2);
+    }
+
+    @Test
+    void returnsPlayerOneAsInitialPlayer() {
+      assertThat(cut.getCurrentPlayer()).isEqualTo(player1);
+    }
+
+    @Test
+    void checkIfPlayerSwitchAfterMove() {
+      Player<?> player1 = cut.getCurrentPlayer();
+      cut.doMove(null);
+      Player<?> player2 = cut.getCurrentPlayer();
+      assertThat(player1).isNotEqualTo(player2);
+    }
+
+    @Test
+    void checkIfPlayerSwitchAfterTwoMoves() {
+      cut.doMove(null);
+      cut.doMove(null);
+      Player<?> currentPlayer = cut.getCurrentPlayer();
+      assertThat(currentPlayer).isEqualTo(player1);
+    }
+  }
+
+  @Nested
+  class UsingDoMove{
+    @BeforeEach
+    void setUp() {
+      cut = new ReversiGame(player1, player2);
+    }
+
+    @Test
+    void verifyThatTheBoardChanges(){
+      Position position = new Position(0,0);
+      cut.doMove(position);
+      assertThat(cut.getBoard().getPosition(position)).isEqualTo(Optional.of(player1.disc()));
+    }
+
+    @Test
+    void verifyThatPositionIsNotAlreadyOccupied() {
+      Position position = new Position(0, 0);
+      cut.doMove(position);
+      assertThatExceptionOfType(AlreadyOccupiedException.class).isThrownBy(()->cut.doMove(position));
+    }
+
+  }
 
 }
