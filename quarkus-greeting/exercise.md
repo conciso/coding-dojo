@@ -1,4 +1,4 @@
-#Quarkus Code Kata
+# Quarkus Code Kata
 In this exercise we want to create a quarkus application. It should provide a REST-API with
 the following properties
 
