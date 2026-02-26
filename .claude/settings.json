@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx stryker run)",
+      "Bash(git init)",
+      "Bash(git add -A)"
+    ]
+  }
+}
