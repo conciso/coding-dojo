@@ -51,7 +51,7 @@ describe('Bullet', () => {
     const bullet = createBullet(100, 500, 'player');
     expect(bullet.x).toBe(100);
     expect(bullet.y).toBe(500);
-    expect(bullet.vy).toBeLessThan(0);
+    expect(bullet.vy).toBe(-400);
     expect(bullet.owner).toBe('player');
     expect(bullet.width).toBe(3);
     expect(bullet.height).toBe(10);
@@ -59,7 +59,7 @@ describe('Bullet', () => {
 
   it('should create an alien bullet moving downward', () => {
     const bullet = createBullet(100, 100, 'alien');
-    expect(bullet.vy).toBeGreaterThan(0);
+    expect(bullet.vy).toBe(200);
     expect(bullet.owner).toBe('alien');
   });
 });
@@ -74,18 +74,26 @@ describe('Shield', () => {
     expect(seg.height).toBe(10);
   });
 
-  it('should create a shield with multiple segments', () => {
+  it('should create a shield with exactly 5x3 = 15 segments', () => {
     const shield = createShield(100, 480);
     expect(shield.x).toBe(100);
     expect(shield.y).toBe(480);
-    expect(shield.segments.length).toBeGreaterThan(0);
+    expect(shield.segments).toHaveLength(15);
   });
 
-  it('should position segments relative to shield origin', () => {
+  it('should position segments in a correct 5x3 grid', () => {
     const shield = createShield(100, 480);
-    for (const seg of shield.segments) {
-      expect(seg.x).toBeGreaterThanOrEqual(100);
-      expect(seg.y).toBeGreaterThanOrEqual(480);
-    }
+    // First segment at origin
+    expect(shield.segments[0].x).toBe(100);
+    expect(shield.segments[0].y).toBe(480);
+    // Second segment one column right
+    expect(shield.segments[1].x).toBe(110);
+    expect(shield.segments[1].y).toBe(480);
+    // 6th segment = second row, first col
+    expect(shield.segments[5].x).toBe(100);
+    expect(shield.segments[5].y).toBe(490);
+    // Last segment (row 2, col 4)
+    expect(shield.segments[14].x).toBe(140);
+    expect(shield.segments[14].y).toBe(500);
   });
 });
