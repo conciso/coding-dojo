@@ -22,3 +22,6 @@
 .settings/
 .project
 bin/
+
+# macOS
+.DS_Store

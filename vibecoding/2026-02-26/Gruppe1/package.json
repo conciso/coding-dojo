@@ -1,0 +1,27 @@
+{
+  "name": "vibecoding-for-testing",
+  "version": "1.0.0",
+  "description": "Minesweeper game in TypeScript",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:coverage:all": "rm -rf coverage && vitest run --coverage && playwright test && node scripts/merge-coverage.cjs coverage/unit/coverage-final.json coverage/e2e/coverage/coverage-final.json coverage/merged/coverage.json && nyc report --temp-dir coverage/merged --reporter text --reporter lcov --report-dir coverage/combined"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@vitest/coverage-v8": "^4.0.18",
+    "monocart-reporter": "^2.10.0",
+    "nyc": "^18.0.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vitest": "^4.0.18"
+  }
+}
