@@ -222,19 +222,20 @@ describe('update', () => {
     expect(next.aliens[1].alive).toBe(true);
   });
 
-  it('should set gameOver when aliens reach player row', () => {
+  it('should set gameOver when aliens reach shield row', () => {
     const state = createInitialState();
+    const shieldY = state.shields[0].segments[0].y;
     for (const alien of state.aliens) {
-      alien.y = state.player.y;
+      alien.y = shieldY;
     }
     const next = update(state, 0, noActions());
     expect(next.gameOver).toBe(true);
   });
 
-  it('should set gameOver when only one alien reaches player row (some vs every)', () => {
+  it('should set gameOver when only one alien reaches shield row (some vs every)', () => {
     const state = createInitialState();
-    // Only first alien at player row, rest far above
-    state.aliens[0].y = state.player.y;
+    const shieldY = state.shields[0].segments[0].y;
+    state.aliens[0].y = shieldY;
     for (let i = 1; i < state.aliens.length; i++) {
       state.aliens[i].y = 50;
     }
@@ -242,14 +243,68 @@ describe('update', () => {
     expect(next.gameOver).toBe(true);
   });
 
-  it('should not set gameOver from dead aliens at player row', () => {
+  it('should not set gameOver from dead aliens at shield row', () => {
     const state = createInitialState();
+    const shieldY = state.shields[0].segments[0].y;
     for (const alien of state.aliens) {
-      alien.y = state.player.y;
+      alien.y = shieldY;
       alien.alive = false;
     }
     const next = update(state, 0, noActions());
     expect(next.gameOver).toBe(false);
+  });
+
+  it('should use topmost shield segment y for game over check', () => {
+    const state = createInitialState();
+    // Find actual topmost shield y
+    const topY = Math.min(...state.shields.flatMap(s => s.segments.map(seg => seg.y)));
+    // Place alien so bottom edge is just at topmost shield
+    state.aliens[0].y = topY - state.aliens[0].height;
+    for (let i = 1; i < state.aliens.length; i++) {
+      state.aliens[i].alive = false;
+    }
+    // alien bottom = topY - height + height = topY → exactly at shield → gameOver
+    const next = update(state, 0, noActions());
+    expect(next.gameOver).toBe(true);
+  });
+
+  it('should not trigger gameOver when alien bottom is 1px above shields', () => {
+    const state = createInitialState();
+    const topY = Math.min(...state.shields.flatMap(s => s.segments.map(seg => seg.y)));
+    state.aliens[0].y = topY - state.aliens[0].height - 1;
+    for (let i = 1; i < state.aliens.length; i++) {
+      state.aliens[i].alive = false;
+    }
+    const next = update(state, 0, noActions());
+    expect(next.gameOver).toBe(false);
+  });
+
+  it('should fall back to player.y when all shields destroyed', () => {
+    const state = createInitialState();
+    // Remove all shield segments
+    for (const shield of state.shields) {
+      shield.segments = [];
+    }
+    // Alien far above player → no game over
+    state.aliens[0].y = 200;
+    for (let i = 1; i < state.aliens.length; i++) {
+      state.aliens[i].alive = false;
+    }
+    const next = update(state, 0, noActions());
+    expect(next.gameOver).toBe(false);
+
+    // Alien at player row → game over
+    state.aliens[0].y = state.player.y - state.aliens[0].height;
+    const next2 = update(state, 0, noActions());
+    expect(next2.gameOver).toBe(true);
+  });
+
+  it('should accumulate elapsed time', () => {
+    const state = createInitialState();
+    const next = update(state, 1 / 60, noActions());
+    expect(next.elapsed).toBeCloseTo(1 / 60, 5);
+    const next2 = update(next, 1 / 60, noActions());
+    expect(next2.elapsed).toBeCloseTo(2 / 60, 5);
   });
 
   it('should not update when game is over', () => {

@@ -4,7 +4,7 @@ import { createPlayer, createAlien, createBullet, createShield } from './entitie
 export const GAME_WIDTH = 800;
 export const GAME_HEIGHT = 600;
 const PLAYER_SPEED = 300;
-const ALIEN_SPEED_BASE = 60;
+const ALIEN_SPEED_BASE = 20;
 const ALIEN_STEP_DOWN = 20;
 
 export interface GameState {
@@ -16,6 +16,7 @@ export interface GameState {
   gameOver: boolean;
   won: boolean;
   alienDirection: 1 | -1;
+  elapsed: number;
 }
 
 export type Direction = 'left' | 'right' | 'none';
@@ -39,6 +40,7 @@ export function createInitialState(): GameState {
     gameOver: false,
     won: false,
     alienDirection: 1,
+    elapsed: 0,
   };
 }
 
@@ -88,7 +90,7 @@ export function moveAliens(state: GameState, dt: number): GameState {
   const liveAliens = state.aliens.filter(a => a.alive);
   if (liveAliens.length === 0) return state;
 
-  const speed = ALIEN_SPEED_BASE + (55 - liveAliens.length) * 2;
+  const speed = ALIEN_SPEED_BASE + (55 - liveAliens.length) * 4 + state.elapsed * 2;
   let direction = state.alienDirection;
 
   // Check if any alive alien hits the edge

@@ -21,22 +21,30 @@ input.bind(window);
 
 let state = createInitialState();
 let lastTime = 0;
+let accumulator = 0;
 let alienShootTimer = 0;
 const ALIEN_SHOOT_INTERVAL = 1.0;
 const FIXED_DT = 1 / 60;
 
 function gameLoop(time: number) {
-  const dt = Math.min((time - lastTime) / 1000, 0.1);
+  const frameTime = Math.min((time - lastTime) / 1000, 0.1);
   lastTime = time;
+  accumulator += frameTime;
 
-  // Alien shooting on timer
-  alienShootTimer += dt;
+  // Alien shooting on real time
+  alienShootTimer += frameTime;
   if (alienShootTimer >= ALIEN_SHOOT_INTERVAL) {
     alienShootTimer -= ALIEN_SHOOT_INTERVAL;
     state = aliensShoot(state);
   }
 
-  state = update(state, FIXED_DT, input.getActions());
+  // Fixed timestep: consume accumulated time in fixed steps
+  const actions = input.getActions();
+  while (accumulator >= FIXED_DT) {
+    state = update(state, FIXED_DT, actions);
+    accumulator -= FIXED_DT;
+  }
+
   render(ctx, state);
 
   // Restart on Space after game over

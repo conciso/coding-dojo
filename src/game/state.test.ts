@@ -18,6 +18,7 @@ describe('createInitialState', () => {
     expect(state.gameOver).toBe(false);
     expect(state.won).toBe(false);
     expect(state.bullets).toHaveLength(0);
+    expect(state.elapsed).toBe(0);
   });
 
   it('should place player centered horizontally', () => {
@@ -168,22 +169,39 @@ describe('moveAliens', () => {
     expect(next.aliens[0].x).toBeLessThan(startX);
   });
 
-  it('should increase speed as aliens die', () => {
+  it('should move at exact base speed with all aliens alive and elapsed=0', () => {
     const state = createInitialState();
+    state.alienDirection = 1;
     const startX = state.aliens[0].x;
-    const next1 = moveAliens(state, 1 / 60);
-    const dx1 = Math.abs(next1.aliens[0].x - startX);
+    const dt = 1 / 60;
+    // speed = 20 + 0*4 + 0*2 = 20
+    const next = moveAliens(state, dt);
+    expect(next.aliens[0].x).toBeCloseTo(startX + 20 * dt, 5);
+  });
 
-    // Kill most aliens
-    const state2 = createInitialState();
+  it('should increase speed by kills*4', () => {
+    const state = createInitialState();
+    state.alienDirection = 1;
+    // Kill 45 aliens → 10 alive → kills = 45
     for (let i = 10; i < 55; i++) {
-      state2.aliens[i].alive = false;
+      state.aliens[i].alive = false;
     }
-    const startX2 = state2.aliens[0].x;
-    const next2 = moveAliens(state2, 1 / 60);
-    const dx2 = Math.abs(next2.aliens[0].x - startX2);
+    const startX = state.aliens[0].x;
+    const dt = 1 / 60;
+    // speed = 20 + 45*4 + 0*2 = 200
+    const next = moveAliens(state, dt);
+    expect(next.aliens[0].x).toBeCloseTo(startX + 200 * dt, 5);
+  });
 
-    expect(dx2).toBeGreaterThan(dx1);
+  it('should increase speed by elapsed*2', () => {
+    const state = createInitialState();
+    state.alienDirection = 1;
+    state.elapsed = 10;
+    const startX = state.aliens[0].x;
+    const dt = 1 / 60;
+    // speed = 20 + 0*4 + 10*2 = 40
+    const next = moveAliens(state, dt);
+    expect(next.aliens[0].x).toBeCloseTo(startX + 40 * dt, 5);
   });
 
   it('should reverse when only one alien reaches right edge (some vs every)', () => {

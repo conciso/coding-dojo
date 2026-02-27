@@ -73,8 +73,12 @@ export function update(state: GameState, dt: number, actions: Actions): GameStat
 
   // 9. Win/Lose conditions
   const allDead = newAliens.every(a => !a.alive);
-  const aliensReachedPlayer = newAliens.some(a => a.alive && a.y >= next.player.y);
-  const gameOver = lives <= 0 || aliensReachedPlayer;
+  const allSegmentYs = newShields.flatMap(s => s.segments.map(seg => seg.y));
+  const shieldTop = allSegmentYs.length > 0
+    ? Math.min(...allSegmentYs)
+    : next.player.y;
+  const aliensReachedShields = newAliens.some(a => a.alive && a.y + a.height >= shieldTop);
+  const gameOver = lives <= 0 || aliensReachedShields;
 
   return {
     ...next,
@@ -85,5 +89,6 @@ export function update(state: GameState, dt: number, actions: Actions): GameStat
     player: { ...next.player, lives },
     gameOver,
     won: allDead,
+    elapsed: state.elapsed + dt,
   };
 }
