@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx stryker run)",
+      "Bash(git init)",
+      "Bash(git add -A)",
+      "Bash(git commit:*)",
+      "Bash(git add src/game/collision.test.ts src/game/entities.test.ts src/game/state.test.ts src/game/update.test.ts src/input/input.test.ts)",
+      "Bash(npx vitest run src/game/update.test.ts)",
+      "Bash(git add src/game/state.ts src/game/state.test.ts src/game/update.ts src/game/update.test.ts src/main.ts coverage/ reports/ .claude/settings.json)"
+    ]
+  }
+}
